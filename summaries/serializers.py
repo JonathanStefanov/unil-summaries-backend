@@ -13,10 +13,16 @@ class CourseSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class SummarySerializer(serializers.ModelSerializer):
+    faculty_name = serializers.SerializerMethodField()
+
     class Meta:
         model = Summary
-        fields = ['id', 'name', 'file', 'rating', 'course', 'uploader']
+        fields = ['id', 'name', 'file', 'rating', 'course', 'uploader', 'faculty_name']
         read_only_fields = ['uploader']  # Make 'uploader' read-only
+    
+    def get_faculty_name(self, obj):
+        # obj is a Summary instance. Access its course, then the faculty of that course.
+        return obj.course.faculty.name
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
